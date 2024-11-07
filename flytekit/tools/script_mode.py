@@ -195,7 +195,6 @@ def list_imported_modules_as_files(source_path: str, modules: List[ModuleType]) 
     # identify a common root amongst the packages listed?
 
     site_packages = site.getsitepackages()
-    site_packages_set = set(site_packages)
     bin_directory = os.path.dirname(sys.executable)
     files = []
     flytekit_root = os.path.dirname(flytekit.__file__)
@@ -217,7 +216,7 @@ def list_imported_modules_as_files(source_path: str, modules: List[ModuleType]) 
             if os.path.commonpath([flytekit_root, mod_file]) == flytekit_root:
                 continue
 
-            if os.path.commonpath(site_packages + [mod_file]) in site_packages_set:
+            if any([os.path.commonpath([site_package, mod_file]) == site_package for site_package in site_packages]):
                 # Do not upload files from site-packages
                 continue
 
